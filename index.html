@@ -1,0 +1,127 @@
+<html>
+      <head>
+        <title>Media Example</title>
+        
+        <link href="buttoms.css" rel="stylesheet"  type="text/css">
+        
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+        <script type="text/javascript" charset="utf-8">
+       
+
+        document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+           //playAudio("http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuitar.mp3");
+        }
+
+        var my_media = null;
+        var mediaTimer = null;
+
+        // Play audio
+        //
+        function playAudio(src) {
+            // Create Media object from src
+            my_media = new Media(src, onSuccess, onError);
+
+            // Play audio
+            my_media.play();
+
+            // Update my_media position every second
+            if (mediaTimer == null) {
+                mediaTimer = setInterval(function() {
+                    // get my_media position
+                    my_media.getCurrentPosition(
+                        // success callback
+                        function(position) {
+                            if (position > -1) {
+                                setAudioPosition((position/1000) + " sec");
+                            }
+                        },
+                        // error callback
+                        function(e) {
+                            console.log("Error getting pos=" + e);
+                            setAudioPosition("Error: " + e);
+                        }
+                    );
+                }, 1000);
+            }
+        }
+
+ 
+        function pauseAudio() {
+            if (my_media) {
+                my_media.pause();
+            }
+        }
+
+ 
+        function stopAudio() {
+            if (my_media) {
+                my_media.stop();
+            }
+            clearInterval(mediaTimer);
+            mediaTimer = null;
+        }
+
+        
+        function onSuccess() {
+            console.log("playAudio():Audio Success");
+        }
+
+        
+        function onError(error) {
+            alert('code: '    + error.code    + '\n' + 
+                  'message: ' + error.message + '\n');
+        }
+
+        function setAudioPosition(position) {
+            document.getElementById('audio_position').innerHTML = position;
+        }
+
+        </script>
+        
+      </head>
+      <style type="text/css">
+	body { 
+		background: #363636; font-family: Arial, Helvetica, sans-serif;/* url(charge.jpg) 0 50px no-repeat*/;
+	}
+
+      .orange {
+	display: block;
+	border: #292929 2px solid;
+	border-radius: 7px;
+	-moz-border-radius: 7px; 
+	-webkit-border-radius: 7px;
+	border: #444444 2px solid;
+	background: #444444;
+	</style>
+      
+     <div>
+     <center>
+     <a href="#" class="orange" onclick="playAudio('http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuitar.mp3');">PLAY</a>
+     //<button onclick="playAudio('http://audio.ibeat.org/content/p1rj1s/p1rj1s_-_rockGuitar.mp3');">PLAY</button>
+    </center> 
+    </div>
+     <div>
+     <center>
+      
+       <button onclick="pauseAudio();">PAUSE</button>
+      </center> 
+      </div>
+      <div>   
+     <center>
+       
+       <button onclick="stopAudio();">STOP</button>
+     </center>   
+         </div>
+         <div>
+         <center>
+      <button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_send"/>
+        <p id="audio_position"></p>
+        </center>
+         </div>
+      </body>
+    </html>
